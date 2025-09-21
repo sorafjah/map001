@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>インタラクティブ世界地図</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            background-color: #f0f0f0;
+            color: #333;
+        }
+        .map-container {
+            max-width: 1000px;
+            width: 95%;
+            margin: 20px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        h1 {
+            color: #444;
+            margin-bottom: 20px;
+        }
+        p {
+            font-size: 1.1em;
+            color: #666;
+        }
+        /* 画像をレスポンシブ対応させる */
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+        /* クリック可能な領域のカーソルをポインターにする */
+        area {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="map-container">
+        <h1>世界地図</h1>
+        <p>色がついている国（日本、ブラジル）をタップしてください。</p>
+
+        <!-- 世界地図の画像 -->
+        <!-- usemap属性で下のmapタグと連携させます -->
+        <img src="世界地図ブラジル日本.jpg" alt="世界地図" usemap="#worldmap">
+
+        <!-- クリック可能な領域を定義 -->
+        <map name="worldmap">
+            <!-- 日本の領域 (赤い部分) -->
+            <area shape="poly" coords="829,195,849,203,851,234,840,257,823,280,808,301,799,286,815,244,821,210" alt="日本" data-audio="nihon-audio">
+            <!-- ブラジルの領域 (緑の部分) -->
+            <area shape="poly" coords="1015,410,1080,380,1150,420,1180,480,1150,550,1120,600,1050,580,1010,520" alt="ブラジル" data-audio="brazil-audio">
+        </map>
+    </div>
+
+    <!-- 音声ファイル -->
+    <audio id="nihon-audio" src="nihon.mp3"></audio>
+    <audio id="brazil-audio" src="brazil.mp3"></audio>
+
+    <script>
+        // DOMが読み込まれた後に実行
+        document.addEventListener('DOMContentLoaded', () => {
+            // すべての<area>要素を取得
+            const areas = document.querySelectorAll('area');
+            
+            // 各<area>要素にクリック（タップ）イベントを設定
+            areas.forEach(area => {
+                // 'click'イベントはPCのマウスとスマホのタップの両方に対応します
+                area.addEventListener('click', (event) => {
+                    // イベントのデフォルトの動作（例：リンク遷移）をキャンセル
+                    event.preventDefault();
+                    
+                    // data-audio属性から再生するオーディオのIDを取得
+                    const audioId = area.dataset.audio;
+                    const audio = document.getElementById(audioId);
+                    
+                    if (audio) {
+                        // 音声を最初から再生するために再生位置を0に設定
+                        audio.currentTime = 0;
+                        // 音声を再生
+                        audio.play();
+                    }
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>
